@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost:3306',
-	'username' => 'root',
+	'hostname' => 'http://us-cdbr-east-04.cleardb.com/',
+	'username' => 'be6342ca12dae9',
 	'password' => '',
-	'database' => 'bimba',
+	'database' => '2e17fa80',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
