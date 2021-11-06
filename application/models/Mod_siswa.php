@@ -71,7 +71,7 @@ class Mod_siswa extends CI_Model{
         }else{
             $response['message'] = 'Failed added siswa data';
             $response['status'] = 500;
-            $response['data'][] = null;
+            $response['data'][] = '';
          }
          return $response;
     }

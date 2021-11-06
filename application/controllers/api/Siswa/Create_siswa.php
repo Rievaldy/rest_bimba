@@ -16,7 +16,6 @@ class Create_siswa extends REST_Controller{
             'jenis_kelamin' => $this->input->post('jenis_kelamin'),
             'tanggal_lahir' => $this->input->post('tanggal_lahir'),
             'tahun_masuk' => $this->input->post('tahun_masuk'),
-            'foto_siswa' => $this->input->post('foto_siswa'),
             'id_user' => $this->input->post('id_user')
         ];
         
