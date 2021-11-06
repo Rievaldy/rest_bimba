@@ -14,6 +14,7 @@ class Mod_user extends CI_Model{
         $this->load->library('upload',$config);
         if (!empty($_FILES['foto_profile'])) {
             if(!$this->upload->do_upload('foto_profile')){
+                $this->upload->display_errors();
                 $response['message'] = 'Failed Upload profile user';
                 $response['status'] = 200;
             }else{
