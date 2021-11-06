@@ -2,15 +2,34 @@
 
 class Mod_siswa extends CI_Model{
     public function create_siswa($params){
+        $path = null;
+        $config['upload_path']          = './assets/user/';
+        $config['allowed_types']        = 'jpg|jpeg';
+        $config['max_size']             = 100;
+        $config['max_width']            = 1024;
+        $config['max_height']           = 768;
+        $config['overwrite']            = true;
+        $this->load->library('upload',$config);
+        if (!empty($_FILES['foto_profile'])) {
+            if(!$this->upload->do_upload('foto_profile')){
+                $response['message'] = 'Failed Upload profile user';
+                $response['status'] = 200;
+            }else{
+                $result = $this->upload->data();
+                $path = $result['full_path'];
+            }
+        }
+
         $data = [
             'first_name' => $params['first_name'],
             'last_name' => $params['last_name'],
             'jenis_kelamin' => $params['jenis_kelamin'],
             'tanggal_lahir' => $params['tanggal_lahir'],
             'tahun_masuk' => $params['tahun_masuk'],
-            'foto_siswa' => $params['foto_siswa'],
+            'foto_siswa' => $path,
             'id_user' => $params['id_user']
         ];
+
         $response = array();
         $insert = $this->db->insert('siswa',$data);
         if ($insert) {
