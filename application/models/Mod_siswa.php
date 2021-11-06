@@ -53,10 +53,10 @@ class Mod_siswa extends CI_Model{
 
         $result = $this->db->query($query);
         $response = array();
-        if($query->num_rows() > 0){
+        if($result->num_rows() > 0){
             $response['error'] = false;
             $response['message'] = 'Successfully retrived user data';
-            foreach ($query->result() as $row){
+            foreach ($result->result() as $row){
                 $tempArray = array();
                 $tempArray['nis'] = $row->nis;
                 $tempArray['first_name'] = $row->first_name;
