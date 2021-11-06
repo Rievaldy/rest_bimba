@@ -4,7 +4,7 @@ class Mod_user extends CI_Model{
     public function create_user($params){
 
         $path = null;
-        $upload_path = 'C:/xampp/htdocs/rest_bimba/assets/user';
+        $upload_path = 'C:\xampp\htdocs\rest_bimba\assets\user';
         $config['upload_path']          = $upload_path;
         $config['allowed_types']        = 'jpg|jpeg';
         $config['max_size']             = 100;
