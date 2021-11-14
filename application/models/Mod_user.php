@@ -4,8 +4,7 @@ class Mod_user extends CI_Model{
     public function create_user($params){
 
         $path = null;
-        $upload_path = 'C:\xampp\htdocs\rest_bimba\assets\user';
-        $config['upload_path']          = $upload_path;
+        $config['upload_path']          = './assets/user/';
         $config['allowed_types']        = 'jpg|jpeg';
         $config['max_size']             = 100;
         $config['max_width']            = 1024;
@@ -84,8 +83,30 @@ class Mod_user extends CI_Model{
     }
 
     public function update_user($params){
-        $update = $this->db->query(
-            "UPDATE `user`
+        $query= "";
+        $path = null;
+        $config['upload_path']          = './assets/user/';
+        $config['allowed_types']        = 'jpg|jpeg';
+        $config['max_size']             = 100;
+        $config['max_width']            = 1024;
+        $config['max_height']           = 768;
+        $config['overwrite']            = true;
+        $this->load->library('upload',$config);
+        if (!empty($_FILES['foto_profile'])) {
+            if(!$this->upload->do_upload('foto_profile')){
+                $this->upload->display_errors();
+                $response['message'] = 'Failed Upload profile user';
+                $response['status'] = 200;
+            }else{
+                $result = $this->upload->data();
+                $path = $result['full_path'];
+                
+                
+            }
+        }
+        
+        if($path == null){
+            $query = "UPDATE `user`
              SET
                 first_name = '".$params['first_name']."',
                 last_name = '".$params['last_name']."',
@@ -93,10 +114,23 @@ class Mod_user extends CI_Model{
                 no_hp = '".$params['no_hp']."',
                 alamat = '".$params['alamat']."',
                 rt = '".$params['rt']."',
-                rw = '".$params['rw']."',
-                foto_profile = '".$params['foto_profile']."'
-                WHERE id_user = '".$params['id_user']."'"
-        );
+                rw = '".$params['rw']."'
+                WHERE id_user = ".$params['id_user'];
+        }else{
+            $query = "UPDATE `user`
+                 SET
+                    first_name = '".$params['first_name']."',
+                    last_name = '".$params['last_name']."',
+                    jenis_kelamin = '".$params['jenis_kelamin']."',
+                    no_hp = '".$params['no_hp']."',
+                    alamat = '".$params['alamat']."',
+                    rt = '".$params['rt']."',
+                    rw = '".$params['rw']."',
+                    foto_profile = '".$path."'
+                    WHERE id_user = '".$params['id_user']."'";
+        }
+        
+        $update = $this->db->query($query);
         $response = array();
         if($update){
             $response['message'] = 'Successfully changed user data';

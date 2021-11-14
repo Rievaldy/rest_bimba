@@ -10,7 +10,13 @@ class Read_jenisPaket extends REST_Controller{
     }
 
     public function index_get(){
-        $response = $this->mod_jenisPaket->read_jenisPaket();
+        $params = [
+            'id_paket' => $this->input->get('id_paket'),
+            'limit' => $this->input->get('limit'),
+            'order_by' => $this->input->get('order_by'),
+            'offset' => $this->input->get('offset')
+        ];
+        $response = $this->mod_jenisPaket->read_jenisPaket($params);
         $this->response($response);
     }
 }

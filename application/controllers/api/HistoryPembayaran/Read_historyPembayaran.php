@@ -10,7 +10,15 @@ class Read_historyPembayaran extends REST_Controller{
     }
 
     public function index_get(){
-        $response = $this->mod_historyPembayaran->read_historyPembayaran();
+
+        $params = [
+            'id_history_pembayaran' => $this->input->get('id_history_pembayaran'),
+            'id_tunggakan' => $this->input->get('id_tunggakan'),
+            'approved' => $this->input->get('approved'),
+            'id_user' => $this->input->get('id_user')
+        ]; 
+
+        $response = $this->mod_historyPembayaran->read_historyPembayaran($params);
         $this->response($response);
     }
 }

@@ -10,11 +10,14 @@ class Update_listBiaya extends REST_Controller{
         $this->load->model('mod_listBiaya');
     }
     public function index_post(){
-        $id_biaya = $_POST['$id_biaya'];
-        $desc_biaya = $_POST['desc_biaya'];
-        $harga = $_POST['harga'];
+        $params = [
+            'id_biaya' => $this->input->post('id_biaya'),
+            'desc_biaya' => $this->input->post('desc_biaya'),
+            'harga' => $this->input->post('harga'),
+            'pembayaran_berkala' => $this->input->post('pembayaran_berkala')
+        ];
 
-        $response = $this->mod_listBiaya->update_listBiaya($id_biaya, $desc_biaya, $harga);
+        $response = $this->mod_listBiaya->update_listBiaya($params);
         $this->response($response);
     }
 }

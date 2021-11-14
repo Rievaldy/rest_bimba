@@ -10,7 +10,16 @@ class Read_tunggakanSiswa extends REST_Controller{
     }
 
     public function index_get(){
-        $response = $this->mod_tunggakanSiswa->read_tunggakanSiswa();
+
+        $params = [
+            'id_tunggakan' => $this->input->get('id_tunggakan'),
+            'nis' => $this->input->get('nis'),
+            'id_paket' => $this->input->get('id_paket'),
+            'tahun_masuk' => $this->input->get('tahun_masuk'),
+            'id_user' => $this->input->get('id_user')
+        ]; 
+        
+        $response = $this->mod_tunggakanSiswa->read_tunggakanSiswa($params);
         $this->response($response);
     }
 }

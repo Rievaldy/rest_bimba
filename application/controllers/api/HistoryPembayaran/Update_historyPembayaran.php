@@ -10,13 +10,15 @@ class Update_historyPembayaran extends REST_Controller{
         $this->load->model('mod_historyPembayaran');
     }
     public function index_post(){
-        $id_history_pembayaran = $_POST['id_history_pembayaran'];
-        $id_tunggakan = $_POST['id_tunggakan'];
-        $id_order_midtrans = $_POST['id_order_midtrans'];
-        $jumlah_disetorkan = $_POST['jumlah_disetorkan'];
-        $tanggal_transaksi = $_POST['tanggal_transaksi'];
 
-        $response = $this->mod_historyPembayaran->update_historyPembayaran($id_history_pembayaran, $id_tunggakan, $id_order_midtrans, $jumlah_disetorkan, $tanggal_transaksi);
+        $params = [
+            'id_history_pembayaran' => $this->input->post('id_history_pembayaran'),
+            'id_tunggakan' => $this->input->post('id_tunggakan'),
+            'jumlah_disetorkan' => $this->input->post('jumlah_disetorkan'),
+            'approved' => $this->input->post('approved')
+        ]; 
+
+        $response = $this->mod_historyPembayaran->update_historyPembayaran($params);
         $this->response($response);
     }
 }

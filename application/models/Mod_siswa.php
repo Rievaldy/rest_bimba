@@ -3,18 +3,17 @@
 class Mod_siswa extends CI_Model{
     public function create_siswa($params){
         $path = null;
-        $upload_path = 'C:\xampp\htdocs\rest_bimba\assets\user';
-        $config['upload_path']          = $upload_path;
+        $config['upload_path']          = './assets/siswa/';
         $config['allowed_types']        = 'jpg|jpeg';
         $config['max_size']             = 100;
         $config['max_width']            = 1024;
         $config['max_height']           = 768;
         $config['overwrite']            = true;
         $this->load->library('upload',$config);
-        if (!empty($_FILES['foto_profile'])) {
-            if(!$this->upload->do_upload('foto_profile')){
-                $response['message'] = 'Failed Upload profile user';
-                $response['status'] = 200;
+        if (!empty($_FILES['foto_siswa'])) {
+            if(!$this->upload->do_upload('foto_siswa')){
+                $response['message'] = 'Failed Upload profile siswa';
+                $response['status'] = 500;
             }else{
                 $result = $this->upload->data();
                 $path = $result['full_path'];
@@ -22,11 +21,11 @@ class Mod_siswa extends CI_Model{
         }
 
         $data = [
-            'first_name' => $params['first_name'],
-            'last_name' => $params['last_name'],
-            'jenis_kelamin' => $params['jenis_kelamin'],
+            'first_name_siswa' => $params['first_name'],
+            'last_name_siswa' => $params['last_name'],
+            'jenis_kelamin_siswa' => $params['jenis_kelamin'],
             'tanggal_lahir' => $params['tanggal_lahir'],
-            'tahun_masuk' => $params['tahun_masuk'],
+            'tahun_masuk_siswa' => $params['tahun_masuk'],
             'foto_siswa' => $path,
             'id_user' => $params['id_user']
         ];
@@ -60,11 +59,11 @@ class Mod_siswa extends CI_Model{
             foreach ($result->result() as $row){
                 $tempArray = array();
                 $tempArray['nis'] = $row->nis;
-                $tempArray['first_name'] = $row->first_name;
-                $tempArray['last_name'] = $row->last_name;
-                $tempArray['jenis_kelamin'] = $row->jenis_kelamin;
+                $tempArray['first_name'] = $row->first_name_siswa;
+                $tempArray['last_name'] = $row->last_name_siswa;
+                $tempArray['jenis_kelamin'] = $row->jenis_kelamin_siswa;
                 $tempArray['tanggal_lahir'] = $row->tanggal_lahir;
-                $tempArray['tahun_masuk'] = $row->tahun_masuk;
+                $tempArray['tahun_masuk'] = $row->tahun_masuk_siswa;
                 $tempArray['foto_siswa'] = $row->foto_siswa;
                 $tempArray['id_user'] = $row->id_user;
                 $response['data'][] = $tempArray;
@@ -72,24 +71,56 @@ class Mod_siswa extends CI_Model{
         }else{
             $response['message'] = 'Failed added siswa data';
             $response['status'] = 500;
-            $response['data'][] = '';
+            $response['data'] = null;
          }
          return $response;
     }
 
     public function update_siswa($params){
-        $update = $this->db->query(
-            "UPDATE `siswa`
+        $query= "";
+        $path = null;
+        $config['upload_path']          = './assets/siswa/';
+        $config['allowed_types']        = 'jpg|jpeg';
+        $config['max_size']             = 100;
+        $config['max_width']            = 1024;
+        $config['max_height']           = 768;
+        $config['overwrite']            = true;
+        $this->load->library('upload',$config);
+        if (!empty($_FILES['foto_siswa'])) {
+            if(!$this->upload->do_upload('foto_siswa')){
+                $this->upload->display_errors();
+                $response['message'] = 'Failed Upload profile user';
+                $response['status'] = 200;
+            }else{
+                $result = $this->upload->data();
+                $path = $result['full_path'];
+                
+                
+            }
+        }
+        
+        if($path == null){
+            $query = "UPDATE `siswa`
              SET
-                first_name = '".$params['first_name']."',
-                last_name = '".$params['last_name']."',
-                jenis_kelamin = '".$params['jenis_kelamin']."',
+                first_name_siswa = '".$params['first_name']."',
+                last_name_siswa = '".$params['last_name']."',
+                jenis_kelamin_siswa = '".$params['jenis_kelamin']."',
                 tanggal_lahir = '".$params['tanggal_lahir']."',
-                tahun_masuk = '".$params['tahun_masuk']."',
-                foto_siswa = '".$params['foto_siswa']."',
-                id_user = '".$params['id_user']."',
-             WHERE nis = ".$params['nis']
-        );
+                tahun_masuk_siswa = '".$params['tahun_masuk']."'
+                WHERE nis = ".$params['nis'];
+        }else{
+            $query = "UPDATE `siswa`
+                 SET
+                    first_name_siswa = '".$params['first_name']."',
+                    last_name_siswa = '".$params['last_name']."',
+                    jenis_kelamin_siswa = '".$params['jenis_kelamin']."',
+                    tanggal_lahir = '".$params['tanggal_lahir']."',
+                    tahun_masuk_siswa = '".$params['tahun_masuk']."',
+                    foto_siswa = '".$path."'
+                    WHERE nis = '".$params['nis']."'";
+        }
+        
+        $update = $this->db->query($query);
         if($update){
             $response = array();
             $response['error'] = false;

@@ -10,10 +10,13 @@ class Create_jenisPaket extends REST_Controller{
     }
     
     public function index_post(){
-        $desc_paket = $_POST['desc_paket'];
-        $masa_pembelajaran = $_POST['masa_pembelajaran'];
 
-        $response =  $this->mod_jenisPaket->create_jenisPaket($desc_paket, $masa_pembelajaran);
+        $params = [
+            'desc_paket' => $this->input->post('desc_paket'),
+            'masa_pembelajaran' => $this->input->post('masa_pembelajaran')
+        ];
+
+        $response =  $this->mod_jenisPaket->create_jenisPaket($params);
         $this->response($response);
     }
 }

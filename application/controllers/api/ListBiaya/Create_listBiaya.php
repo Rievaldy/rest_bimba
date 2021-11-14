@@ -10,10 +10,13 @@ class Create_listBiaya extends REST_Controller{
     }
     
     public function index_post(){
-        $desc_biaya = $_POST['desc_biaya'];
-        $harga = $_POST['harga'];
+        $params = [
+            'desc_biaya' => $this->input->post('desc_biaya'),
+            'harga' => $this->input->post('harga'),
+            'pembayaran_berkala' => $this->input->post('pembayaran_berkala')
+        ];
 
-        $response =  $this->mod_listBiaya->create_listBiaya($desc_biaya, $harga);
+        $response =  $this->mod_listBiaya->create_listBiaya($params);
         $this->response($response);
     }
 }

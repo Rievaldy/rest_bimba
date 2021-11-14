@@ -10,7 +10,14 @@ class Read_listBiaya extends REST_Controller{
     }
 
     public function index_get(){
-        $response = $this->mod_listBiaya->read_listBiaya();
+        $params = [
+            'id_biaya' => $this->input->get('id_biaya'),
+            'limit' => $this->input->get('limit'),
+            'order_by' => $this->input->get('order_by'),
+            'offset' => $this->input->get('offset')
+        ];
+
+        $response = $this->mod_listBiaya->read_listBiaya($params);
         $this->response($response);
     }
 }

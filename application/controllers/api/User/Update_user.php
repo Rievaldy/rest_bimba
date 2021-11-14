@@ -19,8 +19,7 @@ class Update_user extends REST_Controller{
             'no_hp' => $this->input->post('no_hp'),
             'alamat' => $this->input->post('alamat'),
             'rt' => $this->input->post('rt'),
-            'rw' => $this->input->post('rw'),
-            'foto_profile' => $this->input->post('foto_profile')
+            'rw' => $this->input->post('rw')
         ];
 
         $response = $response = $this->mod_user->update_user($params);

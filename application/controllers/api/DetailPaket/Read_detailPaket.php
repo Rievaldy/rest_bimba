@@ -10,7 +10,10 @@ class Read_detailPaket extends REST_Controller{
     }
 
     public function index_get(){
-        $response = $this->mod_detailPaket->read_detailPaket();
+        $params = [
+            'id_paket' => $this->input->get('id_paket')
+        ];
+        $response = $this->mod_detailPaket->read_detailPaket($params);
         $this->response($response);
     }
 }

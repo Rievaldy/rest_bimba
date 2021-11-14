@@ -1,62 +1,116 @@
 <?php 
 
 class Mod_tunggakanSiswa extends CI_Model{
-    public function create_tunggakanSiswa(int $nis, int $id_paket, int $total_harus_bayar, int $baru_dibayarkan){
+    public function create_tunggakanSiswa($params){
         $data = [
-            'nis' => $nis,
-            'id_paket' => $id_paket,
-            'total_harus_bayar' => $total_harus_bayar,
-            'baru_dibayarkan' => $baru_dibayarkan
+            'nis' => $params['nis'],
+            'id_paket' => $params['id_paket'],
+            'tahun_masuk' => $params['tahun_masuk'],
+            'total_harus_bayar' => $params['total_harus_bayar'],
+            'baru_dibayarkan' => $params['baru_dibayarkan']
         ];
+
         $insert = $this->db->insert('tunggakan_siswa',$data);
+        $response = array();
         if ($insert) {
-            $response = array();
             $response['error'] = false;
             $response['message'] = 'Successfully added product data';
             return $response;
-         }
-         return false;
-    }
-
-    public function read_tunggakanSiswa(){
-        $this->db->order_by('id_tunggakan','DESC');
-        $query = $this->db->get('tunggakan_siswa');
-        if($query->num_rows() > 0){
-            $response = array();
+        }else{
             $response['error'] = false;
             $response['message'] = 'Successfully retrived user data';
-            foreach ($query->result() as $row){
-                $tempArray = array();
-                $tempArray['id_tunggakan'] = $row->id_tunggakan;
-                $tempArray['nis'] = $row->nis;
-                $tempArray['id_paket'] = $row->id_paket;
-                $tempArray['total_harus_bayar'] = $row->total_harus_bayar;
-                $tempArray['baru_dibayarkan'] = $row->baru_dibayarkan;
-                $response['data'][] = $tempArray;
-            }
-            return $response;
         }
-        return false;
+        return $response;
     }
 
-    public function update_tunggakanSiswa(int $id_tunggakan, int $nis, int $id_paket, int $total_harus_bayar, int $baru_dibayarkan){
+    public function read_tunggakanSiswa($params){
+        $query = "SELECT tunggakan_siswa.*, siswa.*, user.*, jenis_paket.* FROM tunggakan_siswa inner join siswa on siswa.nis = tunggakan_siswa.nis inner join user on user.id_user = siswa.id_user inner join jenis_paket on jenis_paket.id_paket = tunggakan_siswa.id_paket WHERE 1=1";
+        $query .= (!$params['id_tunggakan'] == 0) ? " && tunggakan_siswa.id_tunggakan = '".$params['id_tunggakan']."' " : "";
+        $query .= (!$params['nis'] == 0) ? " && tunggakan_siswa.nis = '".$params['nis']."' " : "";
+        $query .= (!$params['id_paket'] == 0) ? " && tunggakan_siswa.id_paket = '".$params['id_paket']."' " : "";
+        $query .= (!$params['id_user'] == 0) ? " && user.id_user = '".$params['id_user']."' " : "";
+        $query .= (!$params['tahun_masuk'] == null) ? " && tunggakan_siswa.tahun_masuk = '".$params['tahun_masuk']."' " : "";
+        $result = $this->db->query($query);
+        $response = array();
+        if($result->num_rows() > 0){
+            $response['error'] = false;
+            $response['message'] = 'Successfully retrived user data';
+            foreach ($result->result() as $row){
+                //tunggakan
+                $tempTunggakan = array();
+                $tempTunggakan['id_tunggakan'] = $row->id_tunggakan;
+                $tempTunggakan['nis'] = $row->nis;
+                $tempTunggakan['id_paket'] = $row->id_paket;
+                $tempTunggakan['tahun_masuk'] = $row->tahun_masuk;
+                $tempTunggakan['total_harus_bayar'] = $row->total_harus_bayar;
+                $tempTunggakan['baru_dibayarkan'] = $row->baru_dibayarkan;
+                //siswa
+                $tempSiswa = array();
+                $tempSiswa['nis'] = $row->nis;
+                $tempSiswa['first_name'] = $row->first_name_siswa;
+                $tempSiswa['last_name'] = $row->last_name_siswa;
+                $tempSiswa['jenis_kelamin'] = $row->jenis_kelamin;
+                $tempSiswa['tanggal_lahir'] = $row->tanggal_lahir;
+                $tempSiswa['tahun_masuk'] = $row->tahun_masuk_siswa;
+                $tempSiswa['foto_siswa'] = $row->foto_siswa;
+                $tempSiswa['id_user'] = $row->id_user;
+
+                //paket
+
+                $tempPaket = array();
+                $tempPaket['id_paket'] = $row->id_paket;
+                $tempPaket['desc_paket'] = $row->desc_paket;
+                $tempPaket['masa_pembelajaran'] = $row->masa_pembelajaran;
+
+                //user
+                $tempUser = array();
+                $tempUser['id_user'] = $row->id_user;
+                $tempUser['email_user'] = $row->email_user;
+                $tempUser['first_name'] = $row->first_name;
+                $tempUser['last_name'] = $row->last_name;
+                $tempUser['jenis_kelamin'] = $row->jenis_kelamin;
+                $tempUser['no_hp'] = $row->no_hp;
+                $tempUser['alamat'] = $row->alamat;
+                $tempUser['rt'] = $row->rt;
+                $tempUser['rw'] = $row->rw;
+                $tempUser['foto_profile'] = $row->foto_profile;
+
+                $tempData = [
+                    'tunggakan_siswa' => $tempTunggakan,
+                    'siswa' => $tempSiswa,
+                    'paket' => $tempPaket,
+                    'user' => $tempUser
+                ];
+
+                $response['data'][] = $tempData;
+            }
+        }else{
+            $response['error'] = false;
+            $response['message'] = 'Successfully retrived user data';
+        }
+        return $response;
+    }
+
+    public function update_tunggakanSiswa($params){
         $update = $this->db->query(
             "UPDATE `tunggakan_siswa`
-             SET
-                nis = '$nis',
-                id_paket = '$id_paket',
-                total_harus_bayar = '$total_harus_bayar',
-                baru_dibayarkan = '$baru_dibayarkan'
-                foto_profile = '$foto_profile'
-             WHERE id_tunggakan = '$id_tunggakan' "
+            SET
+                nis = ".$params['nis'].",
+                id_paket = ".$params['id_paket'].",
+                total_harus_bayar = ".$params['total_harus_bayar'].",
+                baru_dibayarkan = ".$params['baru_dibayarkan'].",
+                tahun_masuk = ".$params['tahun_masuk']."
+            WHERE id_tunggakan = ".$params['id_tunggakan']
         );
-        if($update){
-            $response = array();
+        if ($update) {
             $response['error'] = false;
-            $response['message'] = 'Successfully changed product data';
+            $response['message'] = 'Successfully added product data';
             return $response;
+        }else{
+            $response['error'] = false;
+            $response['message'] = 'Successfully retrived user data';
         }
-        return false;
+        return $response;
     }
 
     public function delete_tunggakanSiswa(int $id_tunggakan){
