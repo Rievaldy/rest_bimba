@@ -26,6 +26,7 @@ class Mod_historyPembayaran extends CI_Model{
         $query .= (!$params['id_tunggakan'] == 0) ? " && tunggakan_siswa.id_tunggakan = '".$params['id_tunggakan']."' " : "";
         $query .= (!$params['approved'] == -1) ? " && history_pembayaran.approved = '".$params['approved']."' " : "";
         $query .= (!$params['id_user'] == 0) ? " && user.id_user = '".$params['id_user']."' " : "";
+        $query .= (!$params['start_date'] == null || !$params['end_date'] == null) ? " && history_pembayaran.tanggal_transaksi >= '".$params['start_date']."' and history_pembayaran.tanggal_transaksi <= '".$params['end_date']."'" : "";
         $result = $this->db->query($query);
 
         $response = array();
@@ -98,23 +99,23 @@ class Mod_historyPembayaran extends CI_Model{
         return $response;
     }
 
-    public function update_historyPembayaran(int $id_history_pembayaran, int $id_tunggakan, int $id_order_midtrans, int $jumlah_disetorkan, String $tanggal_transaksi){
+    public function update_historyPembayaran($params){
         $update = $this->db->query(
             "UPDATE `history_pembayaran`
              SET
-                id_tunggakan = '$id_tunggakan',
-                id_order_midtrans = '$id_order_midtrans',
-                jumlah_disetorkan = '$jumlah_disetorkan',
-                tanggal_transaksi = '$tanggal_transaksi'
-             WHERE id_history_pembayaran = '$id_history_pembayaran' "
+                id_tunggakan = ".$params['id_tunggakan'].",
+                jumlah_disetorkan = ".$params['jumlah_disetorkan'].",
+                approved = ".$params['approved']."
+             WHERE id_history_pembayaran = '".$params['id_history_pembayaran']."'"
         );
         if($update){
-            $response = array();
-            $response['error'] = false;
-            $response['message'] = 'Successfully changed product data';
-            return $response;
+            $response['message'] = 'Successfully add user data';
+            $response['status'] = 200;
+        }else{
+            $response['message'] = 'Failed add user data';
+            $response['status'] = 500;
         }
-        return false;
+        return $response;
     }
 
     public function delete_historyPembayaran(int $id_paket){

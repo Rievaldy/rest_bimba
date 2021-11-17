@@ -15,7 +15,9 @@ class Read_historyPembayaran extends REST_Controller{
             'id_history_pembayaran' => $this->input->get('id_history_pembayaran'),
             'id_tunggakan' => $this->input->get('id_tunggakan'),
             'approved' => $this->input->get('approved'),
-            'id_user' => $this->input->get('id_user')
+            'id_user' => $this->input->get('id_user'),
+            'start_date' => $this->input->get('start_date'),
+            'end_date' => $this->input->get('end_date')
         ]; 
 
         $response = $this->mod_historyPembayaran->read_historyPembayaran($params);
